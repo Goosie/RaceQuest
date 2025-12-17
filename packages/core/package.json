@@ -1,0 +1,22 @@
+{
+  "name": "@grounded/core",
+  "version": "0.1.0",
+  "description": "Core utilities for Grounded platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "typescript": "^5.2.2"
+  },
+  "files": [
+    "dist"
+  ]
+}

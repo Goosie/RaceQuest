@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RaceQuest</string>
+    <string name="title_activity_main">RaceQuest</string>
+    <string name="package_name">app.grounded.racequest</string>
+    <string name="custom_url_scheme">app.grounded.racequest</string>
+</resources>
