@@ -12,6 +12,7 @@ import RouteMakerPage from './pages/RouteMakerPage'
 // Components
 import Navigation from './components/Navigation'
 import LoadingScreen from './components/LoadingScreen'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Hooks
 import { useAppStore } from './stores/appStore'
@@ -49,20 +50,22 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-grounded-500 to-grounded-700">
-      <div className="safe-area-top">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/map" element={<MapPage />} />
-          <Route path="/teams" element={<TeamsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/route-maker" element={<RouteMakerPage />} />
-        </Routes>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-grounded-500 to-grounded-700">
+        <div className="safe-area-top">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/map" element={<ErrorBoundary><MapPage /></ErrorBoundary>} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/route-maker" element={<ErrorBoundary><RouteMakerPage /></ErrorBoundary>} />
+          </Routes>
+        </div>
+        <div className="safe-area-bottom">
+          <Navigation />
+        </div>
       </div>
-      <div className="safe-area-bottom">
-        <Navigation />
-      </div>
-    </div>
+    </ErrorBoundary>
   )
 }
 

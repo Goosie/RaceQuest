@@ -147,7 +147,11 @@ export default function MapPage() {
         />
         
         {/* Current Location */}
-        {currentPosition && (
+        {currentPosition && 
+         currentPosition.coords.latitude !== undefined && 
+         currentPosition.coords.longitude !== undefined &&
+         !isNaN(currentPosition.coords.latitude) &&
+         !isNaN(currentPosition.coords.longitude) && (
           <Marker
             position={[currentPosition.coords.latitude, currentPosition.coords.longitude]}
             icon={getCurrentLocationIcon()}
@@ -168,7 +172,10 @@ export default function MapPage() {
           <div key={route.id}>
             {/* Route Polyline */}
             <Polyline
-              positions={route.polyline.map(p => [p.lat, p.lng] as LatLngExpression)}
+              positions={route.polyline
+                .filter(p => p.lat !== undefined && p.lng !== undefined && !isNaN(p.lat) && !isNaN(p.lng))
+                .map(p => [p.lat, p.lng] as LatLngExpression)
+              }
               color={selectedRoute?.id === route.id ? '#0ea5e9' : '#6b7280'}
               weight={selectedRoute?.id === route.id ? 4 : 2}
               opacity={0.8}
@@ -178,35 +185,42 @@ export default function MapPage() {
             />
             
             {/* Checkpoints */}
-            {route.checkpoints.map(checkpoint => (
-              <Marker
-                key={checkpoint.id}
-                position={[checkpoint.lat, checkpoint.lng]}
-                icon={getCheckpointIcon(checkpoint)}
-                eventHandlers={{
-                  click: () => handleCheckpointClick(checkpoint)
-                }}
-              >
-                <Popup>
-                  <div className="min-w-48">
-                    <h3 className="font-semibold text-lg">{checkpoint.name || 'Checkpoint'}</h3>
-                    {checkpoint.description && (
-                      <p className="text-sm text-gray-600 mb-2">{checkpoint.description}</p>
-                    )}
-                    <div className="space-y-1 text-sm">
-                      <p><span className="font-medium">Status:</span> {checkpoint.state}</p>
-                      <p><span className="font-medium">Radius:</span> {checkpoint.radius_m}m</p>
-                      <p><span className="font-medium">Actions:</span> {checkpoint.actions.map(a => a.type).join(', ')}</p>
+            {route.checkpoints
+              .filter(checkpoint => 
+                checkpoint.lat !== undefined && 
+                checkpoint.lng !== undefined && 
+                !isNaN(checkpoint.lat) && 
+                !isNaN(checkpoint.lng)
+              )
+              .map(checkpoint => (
+                <Marker
+                  key={checkpoint.id}
+                  position={[checkpoint.lat, checkpoint.lng]}
+                  icon={getCheckpointIcon(checkpoint)}
+                  eventHandlers={{
+                    click: () => handleCheckpointClick(checkpoint)
+                  }}
+                >
+                  <Popup>
+                    <div className="min-w-48">
+                      <h3 className="font-semibold text-lg">{checkpoint.name || 'Checkpoint'}</h3>
+                      {checkpoint.description && (
+                        <p className="text-sm text-gray-600 mb-2">{checkpoint.description}</p>
+                      )}
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">Status:</span> {checkpoint.state}</p>
+                        <p><span className="font-medium">Radius:</span> {checkpoint.radius_m}m</p>
+                        <p><span className="font-medium">Actions:</span> {checkpoint.actions.map(a => a.type).join(', ')}</p>
+                      </div>
+                      {checkpoint.state === 'seen' && (
+                        <button className="mt-2 w-full bg-grounded-500 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                          Tap NFC to Activate
+                        </button>
+                      )}
                     </div>
-                    {checkpoint.state === 'seen' && (
-                      <button className="mt-2 w-full bg-grounded-500 text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        Tap NFC to Activate
-                      </button>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+                  </Popup>
+                </Marker>
+              ))}
           </div>
         ))}
       </MapContainer>
